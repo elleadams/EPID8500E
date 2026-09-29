@@ -35,11 +35,19 @@ contact_screening_data <- read_csv(data_location4)
 data_location5 <- here("Data", "raw-data", "TB_policies_services_2026-09-29.csv")
 policies_data <- read_csv(data_location5)
 
-
 ```
 
 Use dictionary to make dataframes more readable
 
 ```{r}
+##Full joining
+
+join1 <- full_join(burden_data, contact_screening_data, by = c("country", "year"))
+
+join2 <- full_join(hiv_surveillance_data, join1, by = c("country", "year"))
+
+join3 <- full_join(household_data, join2, by = c("country", "year"))
+
+full_join_data <- full_join(policies_data, join3, by = c("country", "year"))
 
 ```
