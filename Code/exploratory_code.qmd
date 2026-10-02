@@ -50,4 +50,17 @@ join3 <- full_join(household_data, join2, by = c("country", "year"))
 
 full_join_data <- full_join(policies_data, join3, by = c("country", "year"))
 
+#Only keeping the columns of interest 
+full_data_small <- full_join_data %>% select("country", "year", "e_pop_num", "e_inc_num", "e_inc_tbhiv_num", "e_mort_exc_tbhiv_num", "e_mort_tbhiv_num", "e_mort_num", "cfr", "c_cdr", "tb_from_screen_available", "newinc_from_screen", "screen_data_available", "newinc_con", "newinc_con_screen", "newinc_con_tb", "prevtx_data_available.x", "e_hh_contacts", "hcw_tb_infected", "hcw_tot", "ident_pris", "newrel_prisoners", "plhiv_all_screen_data_available", "plhiv_all", "plhiv_all_screen", "prisoners_screen_data_available", "prisoners", "prisoners_screen", "miners_screen_data_available", "miners_screen", "miners", "district", "district_cxr", "district_wrd", "phcf", "phcf_wrd", "presumptive", "presumptive_wrd", "wrd_test_capacity", "m_wrd_error_rate_lte_5pct", "district_monitor_pos_rate", "m_wrd_tat_lt_48h")
+
+#checking for empty rows, outside of the first two columns which will always be filled
+empty_rows <- rowSums(is.na(full_data_small[, -c(1:2)]) | full_data_small[, -c(1:2)] == "") == ncol(full_data_small[, -c(1:2)])
+any(empty_rows)    #all good
+
+#checking for empty columns, outside of the first two columns which will always be filled
+empty_cols <- colSums(is.na(full_data_small[, -c(1:2)]) | full_data_small[, -c(1:2)] == "") == nrow(full_data_small)
+any(empty_cols)
+
+full_data_small <- full_data_small %>% rename("Total Population" = "e_pop_num", "Incident TB Cases" = "e_inc_num", "Incident TB Among HIV Positive" = "e_inc_tbhiv_num", "TB Deaths (Excluding HIV)" = "e_mort_exc_tbhiv_num", "TB Deaths Among HIV Positive" = "e_mort_tbhiv_num", "All TB Deaths" = "e_mort_num", "Case Fatality Ratio" = "cfr", "Case Detection Rate" = "c_cdr", "Is Data on Cases Reported Through Screening Efforts Available?" = "tb_from_screen_available", "Number New/Relapse Cases Reported through Screening" = "newinc_from_screen", "Is Household Contact Data Available?" = "screen_data_available", "Number Household Contacts of Confirmed Cases" = "newinc_con", "Number Househould Contacts Screened" = "newinc_con_screen", "Number Household Contacts with New Case" = "newinc_con_tb", "Is Data Available on Number of Household Contacts Started on Preventative?" = "prevtx_data_available.x", "Household Contacts of TB Cases" = "e_hh_contacts", "Number of Healthcare Workers with TB" = "hcw_tb_infected", "Number of Healthcare Workers" = "hcw_tot", "Is Prisoner TB Data Available?" = "ident_pris", "Number New/Relapse Cases in Prisons" = "newrel_prisoners", 
+
 ```
