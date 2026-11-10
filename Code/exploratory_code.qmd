@@ -9,6 +9,7 @@ library(tidyverse)
 library(skimr) 
 library(here)
 library(tibble)
+library(tidytext)
 ```
 
 Load the data.
@@ -106,4 +107,55 @@ countries_prisoners_yes <- df_prisoners_yes %>% distinct(Country)
 countries_hcw <- df_hcw %>% distinct(Country)
 countries_hhc_yes <- df_hhc_yes %>% distinct(Country)
 countries_hiv_yes <- df_hiv_yes %>% distinct(Country)
+
+#and when 
+reporting_by_year <- bind_rows(df_miners_yes %>% distinct(Country, Year) %>% mutate(Group = "Miners"), df_prisoners_yes %>% distinct(Country, Year) %>% mutate(Group = "Prisoners"), df_hcw %>% distinct(Country, Year) %>% mutate(Group = "Healthcare Workers"), df_hhc_yes %>% distinct(Country, Year) %>% mutate(Group = "Household Contacts"), df_hiv_yes %>% distinct(Country, Year) %>% mutate(Group = "People with HIV")) %>% count(Group, Year, name = "n_countries")
+
+ggplot(reporting_by_year, aes(x = Year, y = n_countries)) +
+  geom_col(fill = "steelblue") +
+  facet_wrap(~ Group, scales = "free_y") +
+  labs(title = "Number of Countries Reporting Screening Data, by Year", x = "Year", y = "Number of countries")
+
+#For each intervention
+##miners
+df_miners_cmp <- df_miners %>% filter(`Is Data Available on Miners Exposed to Silica Dust Screened for TB?` %in% c(0, 1)) %>% mutate(screen_data = factor(`Is Data Available on Miners Exposed to Silica Dust Screened for TB?`, levels = c(0, 1), labels = c("No screening data (0)", "Screening data available (1)")))
+
+df_miners_test <- df_miners_cmp %>% mutate(inc_rate = `Incident TB Cases` / `Total Population` * 100000) %>% filter(!is.na(`Incident TB Cases`), !is.na(`Total Population`),`Incident TB Cases` > 0)
+
+df_miners_test %>% filter(Year %in% c(2023, 2024)) %>% group_by(Year) %>% slice_max(inc_rate, n = 20) %>% ungroup() %>%
+  ggplot(aes(x = reorder_within(Country, `inc_rate`, Year), y = inc_rate, fill = screen_data)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~ Year, scales = "free_y") +
+  scale_y_continuous(labels = scales::comma) +
+  scale_fill_manual(values = c("No screening data (0)" = "firebrick", "Screening data available (1)" = "steelblue")) +
+  labs(title = "Incident Rate by Country, 2023 vs. 2024", x = NULL, y = "Incident Rate", fill = NULL) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+ggplot(df_miners_test, aes(x = screen_data, y = inc_rate, fill = screen_data)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  scale_y_log10() +
+  scale_fill_manual(values = c("firebrick", "steelblue"), guide = "none") +
+  labs(title = "TB Incidence Rate: Countries With vs. Without Miner Screening Data",
+       x = NULL, y = "Incident TB cases per 100,000 (log scale)") +
+  theme_minimal()
+
+df_miners_test <- df_miners_test %>% mutate(`Silica Testing Rate` = (`Number of Miners Screened for TB` / `Number of Miners Exposed to Silica Dust`) * 100)
+
+ggplot(df_miners_test, aes(x = `Silica Testing Rate`, y = inc_rate)) +
+  geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
+  scale_y_log10() +
+  labs(title = "TB Incidence Rate vs. Miner Screening Coverage", x = "% of silica-exposed miners screened", y = "Incident TB cases per 100,000 (log scale)", color = "Year") +
+  theme_minimal()
+
+##prisoners
+df_prisoners_cmp <- df_prisoners %>% filter(`Is Data Available on Number of Prisoners Screened for TB?` %in% c(0, 1)) %>% mutate(screen_data = factor(`Is Data Available on Number of Prisoners Screened for TB?`, levels = c(0, 1), labels = c("No screening data (0)", "Screening data available (1)")))
+
+df_prisoners_test <- df_prisoners_cmp %>% mutate(inc_rate = `Incident TB Cases` / `Total Population` * 100000) %>% filter(!is.na(`Incident TB Cases`), !is.na(`Total Population`),`Incident TB Cases` > 0)
+
+df_prisoners_test <- df_prisoners_test %>% mutate(`Prisoner Testing Rate` = (`Number of Prisoners Screened for TB` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Incidence Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Screen Positivity Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoenrs Screened for TB`) * 100)
+
 ```
