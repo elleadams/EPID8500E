@@ -52,7 +52,7 @@ join3 <- full_join(household_data, join2, by = c("country", "year"))
 full_join_data <- full_join(policies_data, join3, by = c("country", "year"))
 
 #Only keeping the columns of interest 
-full_data_small <- full_join_data %>% select("country", "year", "e_pop_num", "e_inc_num", "e_inc_tbhiv_num", "e_mort_exc_tbhiv_num", "e_mort_tbhiv_num", "e_mort_num", "cfr", "c_cdr", "tb_from_screen_available", "newinc_from_screen", "screen_data_available", "newinc_con", "newinc_con_screen", "newinc_con_tb", "prevtx_data_available.x", "e_hh_contacts", "hcw_tb_infected", "hcw_tot", "ident_pris", "newrel_prisoners", "plhiv_all_screen_data_available", "plhiv_all", "plhiv_all_screen", "prisoners_screen_data_available", "prisoners", "prisoners_screen", "miners_screen_data_available", "miners_screen", "miners", "district", "district_cxr", "district_wrd", "phcf", "phcf_wrd", "presumptive", "presumptive_wrd", "wrd_test_capacity", "m_wrd_error_rate_lte_5pct", "district_monitor_pos_rate", "m_wrd_tat_lt_48h")
+full_data_small <- full_join_data %>% select("country", "year", "e_pop_num", "e_inc_num", "e_inc_tbhiv_num", "e_mort_exc_tbhiv_num", "e_mort_tbhiv_num", "e_mort_num", "cfr", "c_cdr", "tb_from_screen_available", "newinc_from_screen", "screen_data_available", "newinc_con", "newinc_con_screen", "newinc_con_tb", "prevtx_data_available.x", "newinc_con_prevtx.x", "hcw_tb_infected", "hcw_tot", "ident_pris", "newrel_prisoners", "plhiv_all_screen_data_available", "plhiv_all", "plhiv_all_screen", "prisoners_screen_data_available", "prisoners", "prisoners_screen", "miners_screen_data_available", "miners_screen", "miners", "district", "district_cxr", "district_wrd", "phcf", "phcf_wrd", "presumptive", "presumptive_wrd", "wrd_test_capacity", "m_wrd_error_rate_lte_5pct", "district_monitor_pos_rate", "m_wrd_tat_lt_48h")
 
 #checking for empty rows, outside of the first two columns which will always be filled
 empty_rows <- rowSums(is.na(full_data_small[, -c(1:2)]) | full_data_small[, -c(1:2)] == "") == ncol(full_data_small[, -c(1:2)])
@@ -62,7 +62,7 @@ any(empty_rows)    #all good
 empty_cols <- colSums(is.na(full_data_small[, -c(1:2)]) | full_data_small[, -c(1:2)] == "") == nrow(full_data_small)
 any(empty_cols)
 
-full_data_small <- full_data_small %>% rename("Country" = "country", "Year" = "year", "Total Population" = "e_pop_num", "Incident TB Cases" = "e_inc_num", "Incident TB Among HIV Positive" = "e_inc_tbhiv_num", "TB Deaths (Excluding HIV)" = "e_mort_exc_tbhiv_num", "TB Deaths Among HIV Positive" = "e_mort_tbhiv_num", "All TB Deaths" = "e_mort_num", "Case Fatality Ratio" = "cfr", "Case Detection Rate" = "c_cdr", "Is Data on Cases Reported Through Screening Efforts Available?" = "tb_from_screen_available", "Number New/Relapse Cases Reported through Screening" = "newinc_from_screen", "Is Household Contact Data Available?" = "screen_data_available", "Number Household Contacts of Confirmed Cases" = "newinc_con", "Number Househould Contacts Screened" = "newinc_con_screen", "Number Household Contacts with New Case" = "newinc_con_tb", "Is Data Available on Number of Household Contacts Started on Preventative?" = "prevtx_data_available.x", "Household Contacts of TB Cases" = "e_hh_contacts", "Number of Healthcare Workers with TB" = "hcw_tb_infected", "Number of Healthcare Workers" = "hcw_tot", "Is Prisoner TB Data Available?" = "ident_pris", "Number New/Relapse Cases in Prisons" = "newrel_prisoners", "Is Data Available on Number of People with HIV Screened for TB?" = "plhiv_all_screen_data_available", "Number of People with HIV" = "plhiv_all", "Number of People with HIV Screened for TB" = "plhiv_all_screen", "Is Data Available on Number of Prisoners Screened for TB?" = "prisoners_screen_data_available", "Number of Prisoners" = "prisoners", "Number of Prisoners Screened for TB" = "prisoners_screen", "Is Data Available on Miners Exposed to Silica Dust Screened for TB?" = "miners_screen_data_available", "Number of Miners Screened for TB" = "miners_screen", "Number of Miners Exposed to Silica Dust" = "miners", "Total Number of Districts" = "district", "Number of Districts where Chest X-Ray Used for TB Screening" = "district_cxr", "Number of Districts with WHO Rapid Test Requirement" = "district_wrd", "Number of Primary Healthcare Facilities" = "phcf", "Number of PHCF with Access to WHO Rapid Test" = "phcf_wrd", "Number of People with Presumptive TB" = "presumptive", "Number of People with Presumptive TB Screened with WHO Rapid Test" = "presumptive_wrd", "Number of WHO Rapid Tests that can be Performed with Existing Equipment" = "wrd_test_capacity", "Number of Sites Providing WHO Rapid Test with Error Less Than 5%" = "m_wrd_error_rate_lte_5pct", "Number of Districts that Monitor Positivity Rate" = "district_monitor_pos_rate", "Number of Labs with 48hr Turnaround on 80% of Rapid Test Samples" = "m_wrd_tat_lt_48h")
+full_data_small <- full_data_small %>% rename("Country" = "country", "Year" = "year", "Total Population" = "e_pop_num", "Incident TB Cases" = "e_inc_num", "Incident TB Among HIV Positive" = "e_inc_tbhiv_num", "TB Deaths (Excluding HIV)" = "e_mort_exc_tbhiv_num", "TB Deaths Among HIV Positive" = "e_mort_tbhiv_num", "All TB Deaths" = "e_mort_num", "Case Fatality Ratio" = "cfr", "Case Detection Rate" = "c_cdr", "Is Data on Cases Reported Through Screening Efforts Available?" = "tb_from_screen_available", "Number New/Relapse Cases Reported through Screening" = "newinc_from_screen", "Is Household Contact Data Available?" = "screen_data_available", "Number Household Contacts of Confirmed Cases" = "newinc_con", "Number Household Contacts Screened" = "newinc_con_screen", "Number Household Contacts with New Case" = "newinc_con_tb", "Is Data Available on Number of Household Contacts Started on Preventative?" = "prevtx_data_available.x", "Number HHC Cases after Preventative" = "newinc_con_prevtx.x", "Number of Healthcare Workers with TB" = "hcw_tb_infected", "Number of Healthcare Workers" = "hcw_tot", "Is Prisoner TB Data Available?" = "ident_pris", "Number New/Relapse Cases in Prisons" = "newrel_prisoners", "Is Data Available on Number of People with HIV Screened for TB?" = "plhiv_all_screen_data_available", "Number of People with HIV" = "plhiv_all", "Number of People with HIV Screened for TB" = "plhiv_all_screen", "Is Data Available on Number of Prisoners Screened for TB?" = "prisoners_screen_data_available", "Number of Prisoners" = "prisoners", "Number of Prisoners Screened for TB" = "prisoners_screen", "Is Data Available on Miners Exposed to Silica Dust Screened for TB?" = "miners_screen_data_available", "Number of Miners Screened for TB" = "miners_screen", "Number of Miners Exposed to Silica Dust" = "miners", "Total Number of Districts" = "district", "Number of Districts where Chest X-Ray Used for TB Screening" = "district_cxr", "Number of Districts with WHO Rapid Test Requirement" = "district_wrd", "Number of Primary Healthcare Facilities" = "phcf", "Number of PHCF with Access to WHO Rapid Test" = "phcf_wrd", "Number of People with Presumptive TB" = "presumptive", "Number of People with Presumptive TB Screened with WHO Rapid Test" = "presumptive_wrd", "Number of WHO Rapid Tests that can be Performed with Existing Equipment" = "wrd_test_capacity", "Number of Sites Providing WHO Rapid Test with Error Less Than 5%" = "m_wrd_error_rate_lte_5pct", "Number of Districts that Monitor Positivity Rate" = "district_monitor_pos_rate", "Number of Labs with 48hr Turnaround on 80% of Rapid Test Samples" = "m_wrd_tat_lt_48h")
 
 ```
 
@@ -84,7 +84,7 @@ df_prisoners_yes <- df_prisoners %>% filter(`Is Prisoner TB Data Available?` == 
 df_hcw <- full_data_small %>% filter(!is.na(`Number of Healthcare Workers`)) %>% select("Country", "Year", "Total Population", "Incident TB Cases", "TB Deaths (Excluding HIV)", "All TB Deaths", "Case Fatality Ratio", "Case Detection Rate", "Is Data on Cases Reported Through Screening Efforts Available?", "Number New/Relapse Cases Reported through Screening", "Number of Healthcare Workers with TB", "Number of Healthcare Workers")
 
 #Household Contacts
-df_hhc <- full_data_small %>% filter(!is.na(`Is Household Contact Data Available?`)) %>% select("Country", "Year", "Total Population", "Incident TB Cases", "TB Deaths (Excluding HIV)", "All TB Deaths", "Case Fatality Ratio", "Case Detection Rate", "Is Data on Cases Reported Through Screening Efforts Available?", "Number New/Relapse Cases Reported through Screening", "Is Household Contact Data Available?", "Number Household Contacts of Confirmed Cases", "Number Househould Contacts Screened", "Number Household Contacts with New Case", "Is Data Available on Number of Household Contacts Started on Preventative?", "Household Contacts of TB Cases")
+df_hhc <- full_data_small %>% filter(!is.na(`Is Household Contact Data Available?`)) %>% select("Country", "Year", "Total Population", "Incident TB Cases", "TB Deaths (Excluding HIV)", "All TB Deaths", "Case Fatality Ratio", "Case Detection Rate", "Is Data on Cases Reported Through Screening Efforts Available?", "Number New/Relapse Cases Reported through Screening", "Is Household Contact Data Available?", "Number Household Contacts of Confirmed Cases", "Number Household Contacts Screened", "Number Household Contacts with New Case", "Is Data Available on Number of Household Contacts Started on Preventative?", "Number HHC Cases after Preventative")
 
 df_hhc_yes <- df_hhc %>% filter(`Is Household Contact Data Available?` == 1.00 | `Is Household Contact Data Available?` == 60.00)
 
@@ -120,42 +120,113 @@ ggplot(reporting_by_year, aes(x = Year, y = n_countries)) +
 ##miners
 df_miners_cmp <- df_miners %>% filter(`Is Data Available on Miners Exposed to Silica Dust Screened for TB?` %in% c(0, 1)) %>% mutate(screen_data = factor(`Is Data Available on Miners Exposed to Silica Dust Screened for TB?`, levels = c(0, 1), labels = c("No screening data (0)", "Screening data available (1)")))
 
-df_miners_test <- df_miners_cmp %>% mutate(inc_rate = `Incident TB Cases` / `Total Population` * 100000) %>% filter(!is.na(`Incident TB Cases`), !is.na(`Total Population`),`Incident TB Cases` > 0)
+df_miners_test <- df_miners_cmp %>% mutate(mort_rate = `TB Deaths (Excluding HIV)` / `Total Population` * 100000) %>% filter(!is.na(`TB Deaths (Excluding HIV)`), !is.na(`Total Population`),`TB Deaths (Excluding HIV)` > 0)
 
-df_miners_test %>% filter(Year %in% c(2023, 2024)) %>% group_by(Year) %>% slice_max(inc_rate, n = 20) %>% ungroup() %>%
-  ggplot(aes(x = reorder_within(Country, `inc_rate`, Year), y = inc_rate, fill = screen_data)) +
-  geom_col() +
-  coord_flip() +
-  facet_wrap(~ Year, scales = "free_y") +
-  scale_y_continuous(labels = scales::comma) +
-  scale_fill_manual(values = c("No screening data (0)" = "firebrick", "Screening data available (1)" = "steelblue")) +
-  labs(title = "Incident Rate by Country, 2023 vs. 2024", x = NULL, y = "Incident Rate", fill = NULL) +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+###Commenting this graph out because I'm not convinced it tells me anything useful 
+# df_miners_test %>% filter(Year %in% c(2023, 2024)) %>% group_by(Year) %>% slice_max(mort_rate, n = 20) %>% ungroup() %>%
+  #ggplot(aes(x = reorder_within(Country, `mort_rate`, Year), y = mort_rate, fill = screen_data)) +
+ # geom_col() +
+  #coord_flip() +
+  #facet_wrap(~ Year, scales = "free_y") +
+  #scale_y_continuous(labels = scales::comma) +
+ # scale_fill_manual(values = c("No screening data (0)" = "firebrick", "Screening data available (1)" = "steelblue")) +
+  #labs(title = "Mortality Rate by Country, 2023 vs. 2024", x = NULL, y = "Mortality Rate", fill = NULL) +
+  #theme_minimal() +
+  #theme(legend.position = "bottom")
 
-ggplot(df_miners_test, aes(x = screen_data, y = inc_rate, fill = screen_data)) +
+ggplot(df_miners_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
   geom_jitter(width = 0.15, alpha = 0.5) +
   scale_y_log10() +
   scale_fill_manual(values = c("firebrick", "steelblue"), guide = "none") +
-  labs(title = "TB Incidence Rate: Countries With vs. Without Miner Screening Data",
-       x = NULL, y = "Incident TB cases per 100,000 (log scale)") +
+  labs(title = "TB Mortality Rate: Countries With vs. Without Miner Screening Data",
+       x = NULL, y = "TB Deaths per 100,000 (log scale)") +
   theme_minimal()
+
+wilcox.test(mort_rate ~ screen_data, data = df_miners_test)
 
 df_miners_test <- df_miners_test %>% mutate(`Silica Testing Rate` = (`Number of Miners Screened for TB` / `Number of Miners Exposed to Silica Dust`) * 100)
 
-ggplot(df_miners_test, aes(x = `Silica Testing Rate`, y = inc_rate)) +
+ggplot(df_miners_test, aes(x = `Silica Testing Rate`, y = mort_rate)) +
   geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
   geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
   scale_y_log10() +
-  labs(title = "TB Incidence Rate vs. Miner Screening Coverage", x = "% of silica-exposed miners screened", y = "Incident TB cases per 100,000 (log scale)", color = "Year") +
+  labs(title = "TB Mortality Rate vs. Miner Screening Coverage", x = "% of silica-exposed miners screened", y = "TB Deaths per 100,000 (log scale)", color = "Year") +
   theme_minimal()
+
+cor.test(df_miners_test$`Silica Testing Rate`, df_miners_test$mort_rate, method = "spearman")
 
 ##prisoners
 df_prisoners_cmp <- df_prisoners %>% filter(`Is Data Available on Number of Prisoners Screened for TB?` %in% c(0, 1)) %>% mutate(screen_data = factor(`Is Data Available on Number of Prisoners Screened for TB?`, levels = c(0, 1), labels = c("No screening data (0)", "Screening data available (1)")))
 
-df_prisoners_test <- df_prisoners_cmp %>% mutate(inc_rate = `Incident TB Cases` / `Total Population` * 100000) %>% filter(!is.na(`Incident TB Cases`), !is.na(`Total Population`),`Incident TB Cases` > 0)
+df_prisoners_test <- df_prisoners_cmp %>% mutate(mort_rate = `TB Deaths (Excluding HIV)` / `Total Population` * 100000) %>% filter(!is.na(`TB Deaths (Excluding HIV)`), !is.na(`Total Population`),`TB Deaths (Excluding HIV)` > 0)
 
-df_prisoners_test <- df_prisoners_test %>% mutate(`Prisoner Testing Rate` = (`Number of Prisoners Screened for TB` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Incidence Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Screen Positivity Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoenrs Screened for TB`) * 100)
+ggplot(df_prisoners_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  scale_y_log10() +
+  scale_fill_manual(values = c("firebrick", "steelblue"), guide = "none") +
+  labs(title = "TB Mortality Rate: Countries With vs. Without Prisoner Screening Data",
+       x = NULL, y = "TB Deaths per 100,000 (log scale)") +
+  theme_minimal()
+
+wilcox.test(mort_rate ~ screen_data, data = df_prisoners_test)
+
+df_prisoners_test <- df_prisoners_test %>% mutate(`Prisoner Testing Rate` = (`Number of Prisoners Screened for TB` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Incidence Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Screen Positivity Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoners Screened for TB`) * 100)
+
+ggplot(df_prisoners_test, aes(x = `Prisoner Testing Rate`, y = mort_rate)) +
+  geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
+  scale_y_log10() +
+  labs(title = "TB Mortality Rate vs. Prisoner Screening Coverage", x = "% of prisoners screened", y = "TB Deaths per 100,000 (log scale)", color = "Year") +
+  theme_minimal()
+
+cor.test(df_prisoners_test$`Prisoner Testing Rate`, df_prisoners_test$mort_rate, method = "spearman")
+
+#Household contacts 
+df_hhc_cmp <- df_hhc %>% mutate(screen_data = case_when(`Is Household Contact Data Available?` %in% c(1, 60) ~ "Screening data available", TRUE ~ "No screening data"))
+
+df_hhc_cmp <- df_hhc_cmp %>% mutate(prev_screen_data = case_when(`Is Data Available on Number of Household Contacts Started on Preventative?` %in% c(1, 60) ~ "Preventative data available", TRUE ~ "No preventative data"))
+df_hhc_cmp$prev_screen_data <- factor(df_hhc_cmp$prev_screen_data, levels = c("No preventative data", "Preventative data available"))
+
+df_hhc_test <- df_hhc_cmp %>% mutate(mort_rate = (`TB Deaths (Excluding HIV)` / `Total Population`) * 100000) %>% filter(!is.na(`TB Deaths (Excluding HIV)`), !is.na(`Total Population`),`TB Deaths (Excluding HIV)` > 0)
+
+ggplot(df_hhc_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  scale_y_log10() +
+  scale_fill_manual(values = c("firebrick", "steelblue"), guide = "none") +
+  labs(title = "TB Mortality Rate: Countries With vs. Without Household Contact Screening Data",
+       x = NULL, y = "TB Deaths per 100,000 (log scale)") +
+  theme_minimal()
+
+wilcox.test(mort_rate ~ screen_data, data = df_hhc_test)
+
+df_hhc_test <- df_hhc_test %>% mutate(`Household Contacts Testing Rate` = (`Number Household Contacts Screened` / `Number Household Contacts of Confirmed Cases`) * 100) %>% mutate(`HHC Incidence Rate` = (`Number Household Contacts with New Case` / `Number Household Contacts Screened`) * 100)
+
+ggplot(df_hhc_test, aes(x = `Household Contacts Testing Rate`, y = mort_rate)) +
+  geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
+  scale_y_log10() +
+  labs(title = "TB Mortality Rate vs. Household Contact Screening Coverage", x = "% of household contacts screened", y = "TB Deaths per 100,000 (log scale)", color = "Year") +
+  theme_minimal()
+
+cor.test(df_hhc_test$`Household Contacts Testing Rate`, df_hhc_test$mort_rate, method = "spearman")
+
+ggplot(df_hhc_test, aes(x = prev_screen_data, y = mort_rate, fill = prev_screen_data)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.5) +
+  geom_jitter(width = 0.12, size = 2, alpha = 0.7) +
+  stat_summary(fun = median, geom = "text", aes(label = round(after_stat(y), 1)), vjust = -0.8, fontface = "bold") +
+  scale_fill_manual(values = c("No preventative data" = "#E69F00", "Preventative data available" = "#0072B2"), guide = "none") +
+  labs(x = NULL, y = "TB Deaths per 100,000 (log scale)", title = "Mortality rate by availability of household contact preventative treatment data", caption = paste0("n = ", sum(df_hhc_test$prev_screen_data == "No preventative data"), " (no data), ", sum(df_hhc_test$prev_screen_data == "Preventative data available"), " (data available)")) +
+  theme_minimal(base_size = 13)
+
+wilcox.test(mort_rate ~ prev_screen_data, data = df_hhc_test)
+
+#Healthcare workers
+
+
+#HIV
+
 
 ```
