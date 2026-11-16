@@ -109,7 +109,7 @@ countries_hhc_yes <- df_hhc_yes %>% distinct(Country)
 countries_hiv_yes <- df_hiv_yes %>% distinct(Country)
 
 #and when 
-reporting_by_year <- bind_rows(df_miners_yes %>% distinct(Country, Year) %>% mutate(Group = "Miners"), df_prisoners_yes %>% distinct(Country, Year) %>% mutate(Group = "Prisoners"), df_hcw %>% distinct(Country, Year) %>% mutate(Group = "Healthcare Workers"), df_hhc_yes %>% distinct(Country, Year) %>% mutate(Group = "Household Contacts"), df_hiv_yes %>% distinct(Country, Year) %>% mutate(Group = "People with HIV")) %>% count(Group, Year, name = "n_countries")
+reporting_by_year <- bind_rows(df_miners_yes %>% distinct(Country, Year) %>% mutate(Group = "Miners"), df_prisoners_yes %>% distinct(Country, Year) %>% mutate(Group = "Prisoners"), df_hhc_yes %>% distinct(Country, Year) %>% mutate(Group = "Household Contacts"), df_hiv_yes %>% distinct(Country, Year) %>% mutate(Group = "People with HIV")) %>% count(Group, Year, name = "n_countries")
 
 plot1 <- ggplot(reporting_by_year, aes(x = Year, y = n_countries)) +
   geom_col(fill = "steelblue") +
