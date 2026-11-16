@@ -111,10 +111,14 @@ countries_hiv_yes <- df_hiv_yes %>% distinct(Country)
 #and when 
 reporting_by_year <- bind_rows(df_miners_yes %>% distinct(Country, Year) %>% mutate(Group = "Miners"), df_prisoners_yes %>% distinct(Country, Year) %>% mutate(Group = "Prisoners"), df_hcw %>% distinct(Country, Year) %>% mutate(Group = "Healthcare Workers"), df_hhc_yes %>% distinct(Country, Year) %>% mutate(Group = "Household Contacts"), df_hiv_yes %>% distinct(Country, Year) %>% mutate(Group = "People with HIV")) %>% count(Group, Year, name = "n_countries")
 
-ggplot(reporting_by_year, aes(x = Year, y = n_countries)) +
+plot1 <- ggplot(reporting_by_year, aes(x = Year, y = n_countries)) +
   geom_col(fill = "steelblue") +
   facet_wrap(~ Group, scales = "free_y") +
   labs(title = "Number of Countries Reporting Screening Data, by Year", x = "Year", y = "Number of countries")
+
+ggsave(filename = "country_year_plot.png",
+  plot = plot1,
+  path = "Output")
 
 #For each intervention
 ##miners
@@ -134,7 +138,7 @@ df_miners_test <- df_miners_cmp %>% mutate(mort_rate = `TB Deaths (Excluding HIV
   #theme_minimal() +
   #theme(legend.position = "bottom")
 
-ggplot(df_miners_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
+plot2 <- ggplot(df_miners_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
   geom_jitter(width = 0.15, alpha = 0.5) +
   scale_y_log10() +
@@ -143,16 +147,24 @@ ggplot(df_miners_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) 
        x = NULL, y = "TB Deaths per 100,000 (log scale)") +
   theme_minimal()
 
+ggsave(filename = "country_miner_plot.png",
+  plot = plot2,
+  path = "Output")
+
 wilcox.test(mort_rate ~ screen_data, data = df_miners_test)
 
 df_miners_test <- df_miners_test %>% mutate(`Silica Testing Rate` = (`Number of Miners Screened for TB` / `Number of Miners Exposed to Silica Dust`) * 100)
 
-ggplot(df_miners_test, aes(x = `Silica Testing Rate`, y = mort_rate)) +
+plot3 <- ggplot(df_miners_test, aes(x = `Silica Testing Rate`, y = mort_rate)) +
   geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
   geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
   scale_y_log10() +
   labs(title = "TB Mortality Rate vs. Miner Screening Coverage", x = "% of silica-exposed miners screened", y = "TB Deaths per 100,000 (log scale)", color = "Year") +
   theme_minimal()
+
+ggsave(filename = "miner_coverage_plot.png",
+  plot = plot3,
+  path = "Output")
 
 cor.test(df_miners_test$`Silica Testing Rate`, df_miners_test$mort_rate, method = "spearman")
 
@@ -161,7 +173,7 @@ df_prisoners_cmp <- df_prisoners %>% filter(`Is Data Available on Number of Pris
 
 df_prisoners_test <- df_prisoners_cmp %>% mutate(mort_rate = `TB Deaths (Excluding HIV)` / `Total Population` * 100000) %>% filter(!is.na(`TB Deaths (Excluding HIV)`), !is.na(`Total Population`),`TB Deaths (Excluding HIV)` > 0)
 
-ggplot(df_prisoners_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
+plot4 <- ggplot(df_prisoners_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
   geom_jitter(width = 0.15, alpha = 0.5) +
   scale_y_log10() +
@@ -170,16 +182,24 @@ ggplot(df_prisoners_test, aes(x = screen_data, y = mort_rate, fill = screen_data
        x = NULL, y = "TB Deaths per 100,000 (log scale)") +
   theme_minimal()
 
+ggsave(filename = "country_prisoner_plot.png",
+  plot = plot4,
+  path = "Output")
+
 wilcox.test(mort_rate ~ screen_data, data = df_prisoners_test)
 
 df_prisoners_test <- df_prisoners_test %>% mutate(`Prisoner Testing Rate` = (`Number of Prisoners Screened for TB` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Incidence Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoners`) * 100) %>% mutate(`Prisoner Screen Positivity Rate` = (`Number New/Relapse Cases in Prisons` / `Number of Prisoners Screened for TB`) * 100)
 
-ggplot(df_prisoners_test, aes(x = `Prisoner Testing Rate`, y = mort_rate)) +
+plot5 <- ggplot(df_prisoners_test, aes(x = `Prisoner Testing Rate`, y = mort_rate)) +
   geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
   geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
   scale_y_log10() +
   labs(title = "TB Mortality Rate vs. Prisoner Screening Coverage", x = "% of prisoners screened", y = "TB Deaths per 100,000 (log scale)", color = "Year") +
   theme_minimal()
+
+ggsave(filename = "prisoner_coverage_plot.png",
+  plot = plot5,
+  path = "Output")
 
 cor.test(df_prisoners_test$`Prisoner Testing Rate`, df_prisoners_test$mort_rate, method = "spearman")
 
@@ -191,7 +211,7 @@ df_hhc_cmp$prev_screen_data <- factor(df_hhc_cmp$prev_screen_data, levels = c("N
 
 df_hhc_test <- df_hhc_cmp %>% mutate(mort_rate = (`TB Deaths (Excluding HIV)` / `Total Population`) * 100000) %>% filter(!is.na(`TB Deaths (Excluding HIV)`), !is.na(`Total Population`),`TB Deaths (Excluding HIV)` > 0)
 
-ggplot(df_hhc_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
+plot6 <- ggplot(df_hhc_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
   geom_jitter(width = 0.15, alpha = 0.5) +
   scale_y_log10() +
@@ -200,20 +220,28 @@ ggplot(df_hhc_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
        x = NULL, y = "TB Deaths per 100,000 (log scale)") +
   theme_minimal()
 
+ggsave(filename = "country_hhc_plot.png",
+  plot = plot6,
+  path = "Output")
+
 wilcox.test(mort_rate ~ screen_data, data = df_hhc_test)
 
 df_hhc_test <- df_hhc_test %>% mutate(`Household Contacts Testing Rate` = (`Number Household Contacts Screened` / `Number Household Contacts of Confirmed Cases`) * 100) %>% mutate(`HHC Incidence Rate` = (`Number Household Contacts with New Case` / `Number Household Contacts Screened`) * 100)
 
-ggplot(df_hhc_test, aes(x = `Household Contacts Testing Rate`, y = mort_rate)) +
+plot7 <- ggplot(df_hhc_test, aes(x = `Household Contacts Testing Rate`, y = mort_rate)) +
   geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
   geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
   scale_y_log10() +
   labs(title = "TB Mortality Rate vs. Household Contact Screening Coverage", x = "% of household contacts screened", y = "TB Deaths per 100,000 (log scale)", color = "Year") +
   theme_minimal()
 
+ggsave(filename = "hhc_coverage_plot.png",
+  plot = plot7,
+  path = "Output")
+
 cor.test(df_hhc_test$`Household Contacts Testing Rate`, df_hhc_test$mort_rate, method = "spearman")
 
-ggplot(df_hhc_test, aes(x = prev_screen_data, y = mort_rate, fill = prev_screen_data)) +
+plot8 <- ggplot(df_hhc_test, aes(x = prev_screen_data, y = mort_rate, fill = prev_screen_data)) +
   geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.5) +
   geom_jitter(width = 0.12, size = 2, alpha = 0.7) +
   stat_summary(fun = median, geom = "text", aes(label = round(after_stat(y), 1)), vjust = -0.8, fontface = "bold") +
@@ -221,12 +249,45 @@ ggplot(df_hhc_test, aes(x = prev_screen_data, y = mort_rate, fill = prev_screen_
   labs(x = NULL, y = "TB Deaths per 100,000 (log scale)", title = "Mortality rate by availability of household contact preventative treatment data", caption = paste0("n = ", sum(df_hhc_test$prev_screen_data == "No preventative data"), " (no data), ", sum(df_hhc_test$prev_screen_data == "Preventative data available"), " (data available)")) +
   theme_minimal(base_size = 13)
 
+ggsave(filename = "hhc_preventative_plot.png",
+  plot = plot8,
+  path = "Output")
+
 wilcox.test(mort_rate ~ prev_screen_data, data = df_hhc_test)
 
-#Healthcare workers
-
+#Healthcare workers - bailing on this category because there's no information about screening, just number of cases and number of healthcare workers
 
 #HIV
+df_hiv_cmp <- df_hiv %>% filter(`Is Data Available on Number of People with HIV Screened for TB?` %in% c(0, 1)) %>% mutate(screen_data = factor(`Is Data Available on Number of People with HIV Screened for TB?`, levels = c(0, 1), labels = c("No screening data (0)", "Screening data available (1)")))
 
+df_hiv_test <- df_hiv_cmp %>% mutate(mort_rate = (`TB Deaths (Excluding HIV)` / `Total Population`) * 100000) %>% filter(!is.na(`TB Deaths (Excluding HIV)`), !is.na(`Total Population`),`TB Deaths (Excluding HIV)` > 0) %>% mutate(screening_rate = ((`Number of People with HIV Screened for TB` / `Number of People with HIV`) * 100))
+
+plot9 <- ggplot(df_hiv_test, aes(x = screen_data, y = mort_rate, fill = screen_data)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  scale_y_log10() +
+  scale_fill_manual(values = c("firebrick", "steelblue"), guide = "none") +
+  labs(title = "TB Mortality Rate: Countries With vs. Without HIV Screening Data",
+       x = NULL, y = "TB Deaths per 100,000 (log scale)") +
+  theme_minimal()
+
+ggsave(filename = "country_hiv_plot.png",
+  plot = plot9,
+  path = "Output")
+
+wilcox.test(mort_rate ~ screen_data, data = df_hiv_test)
+
+plot10 <- ggplot(df_hiv_test, aes(x = screening_rate, y = mort_rate)) +
+  geom_point(aes(color = factor(Year)), size = 2, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.8) +
+  scale_y_log10() +
+  labs(title = "TB Mortality Rate vs. HIV Screening Coverage", x = "% of people livingvwith HIV screened for TB", y = "TB Deaths per 100,000 (log scale)", color = "Year") +
+  theme_minimal()
+
+ggsave(filename = "hiv_coverage_plot.png",
+  plot = plot10,
+  path = "Output")
+
+cor.test(df_hiv_test$screening_rate, df_hiv_test$mort_rate, method = "spearman")
 
 ```
